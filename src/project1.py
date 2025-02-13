@@ -84,11 +84,10 @@ print(f"O(n^2) version: {(time.time_ns() - start) / 1_000_000_000}")
 
 start = time.time_ns()
 m = dict[int, int]()
-for i in range(len(A)):
-    comp = target - A[i]
-    if comp in m and (j := m[comp]) != A[i]:
-        j = m[comp]
-        print(f"Positions: {i}, {j} | Values: {A[i]}, {A[j]}")
+for i, x in enumerate(A):
+    y = target - x
+    if y in m:
+        print(f"Positions: {i}, {m[y]} | Values: {x}, {y}")
         break
-    m[comp] = i
+    m[x] = i
 print(f"O(n) version: {(time.time_ns() - start) / 1_000_000_000}")
