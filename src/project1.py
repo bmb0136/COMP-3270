@@ -3,10 +3,8 @@ COMP 3270 Intro to Algorithms Homework 1: Introduction to Python
 install python (google it) and make sure you have python version 3.6+ 
 """
 
-from operator import truediv
 import random
 import time
-from collections.abc import Generator
 
 """
 Problem 1: Make your own hashmap class from scratch (using only python lists). dicts not allowed. This problem will be 75% of this homework
@@ -18,22 +16,73 @@ For each key, there should be an associated value.
 Implement insert(self, key, value), delete(self, key), get(self, key), and iter(self) which only loops through non-empty key, value pairs.
 See https://www.w3schools.com/python/python_iterators.asp for how to implement an iterator in python
 """
-
-
-class mymap[K, V]:
-    data: list[list[tuple[K, V]]]
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.next = None
+    def iter(self):
+        current = self
+        while current:
+            yield current
+            current = current.next
+class mymap:
     def __init__(self):
-        self.data = [[] * 1024]
-    def get(self, key: K) -> V | None:
-        pass
-    def insert(self, key: K, value: V) -> None:
-        pass
-    def delete(self, key: K) -> None:
-        pass
-    def iter(self) -> Generator[tuple[K, V]]:
+        self.data = [None] * 1024
+    def get(self, key):
+        node = self._get_node(key)
+        if node:
+            return node.val
+        return None
+    def _get_node(self, key):
+        current = self.data[self._hash(key)]
+        while current:
+            if current.key == key:
+                return current
+            current = current.next
+        return None
+    def insert(self, key, value):
+        index = self._hash(key)
+        if self.data[index] == None:
+            self.data[index] = Node(key, value)
+            return
+        current = self.data[index]
+        prev = None
+        while current:
+            if current.key == key:
+                raise Exception("Key already exists")
+            prev = current
+            current = current.next
+        prev.next = Node(key, value)
+    def delete(self, key):
+        index = self._hash(key)
+        current = self.data[index]
+        if not current:
+            return
+        if current.key == key:
+            self.data[index] = current.next
+            return
+        prev = current
+        current = current.next
+        while current:
+            if current.key == key:
+                prev.next = current.next
+                return
+            prev = current
+            current = current.next
+    def iter(self):
         for x in self.data:
-            for y in x:
-                yield y
+            if x:
+                for y in x.iter():
+                    yield (y.key, y.val)
+    def _hash(self, x):
+        if type(x) == str:
+            n = int.from_bytes(x.encode('utf-8'), 'little')
+        elif type(x) == int:
+            n = x
+        else:
+            raise Exception(f"Type {type(x)} not supported")
+        return n % len(self.data)
 
 
 """
@@ -41,25 +90,19 @@ Problem 2: Use your hashmap class to count the number of each substring of lengt
 Print out the repeated items and the number of times they were repeated
 run it on string "ATCTTGGTTATTGCGTGGTTATTCTTGC" with k=4
 """
-expected = dict[str, int]()
-
-d = mymap[str, int]()
+d = mymap()
 s = "ATCTTGGTTATTGCGTGGTTATTCTTGC"
 k = 4
 for i in range(len(s) - k):
     sub = s[i : i + k]
     v = d.get(sub)
-    if v:
+    if v != None:
         d.delete(sub)
         d.insert(sub, v + 1)
     else:
         d.insert(sub, 1)
-
-    if sub in expected:
-        expected[sub] += 1
-    else:
-        expected[sub] = 1
-assert list(sorted(expected)) == list(sorted(d.iter()))
+for k, v in d.iter():
+    print(k, v)
 
 """
 Problem 3: Two sum. This time just use the python dict or set. 
@@ -72,7 +115,7 @@ A = [random.randint(0, 1000000000) for _ in range(10000)]
 target = A[random.randint(0, len(A) - 1)] + A[random.randint(0, len(A) - 1)]
 
 start = time.time_ns()
-m = dict[int, int]()
+m = {}
 for i, x in enumerate(A):
     y = target - x
     if y in m:
