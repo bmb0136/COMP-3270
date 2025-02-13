@@ -68,3 +68,26 @@ Compare the time taken between the implementations using the time package import
 """
 A = [random.randint(0, 1000000000) for _ in range(10000)]
 target = A[random.randint(0, len(A) - 1)] + A[random.randint(0, len(A) - 1)]
+
+start = time.time_ns()
+for i in range(len(A)):
+    broke = False
+    for j in range(i + 1, len(A)):
+        if A[i] + A[j] == target:
+            broke = True
+            print(f"Positions: {i}, {j} | Values: {A[i]}, {A[j]}")
+            break
+    if broke:
+        break
+print(f"O(n^2) version: {(time.time_ns() - start) / 1_000_000_000}")
+
+start = time.time_ns()
+m = dict[int, int]()
+for i in range(len(A)):
+    comp = target - A[i]
+    if comp in m and (j := m[comp]) != A[i]:
+        j = m[comp]
+        print(f"Positions: {i}, {j} | Values: {A[i]}, {A[j]}")
+        break
+    m[comp] = i
+print(f"O(n) version: {(time.time_ns() - start) / 1_000_000_000}")
