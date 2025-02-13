@@ -6,6 +6,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     flake-utils,
     ...
@@ -26,11 +27,18 @@
           '';
         };
     in {
+      packages.default = self.packages.${system}.project1;
       packages.project0 = mkPythonApp {
         name = "project0";
         folder = ./src;
         main = "project0.py";
         packages = pp: with pp; [numpy];
+      };
+      packages.project1 = mkPythonApp {
+        name = "project1";
+        folder = ./src;
+        main = "project1.py";
+        packages = pp: [];
       };
     });
 }
