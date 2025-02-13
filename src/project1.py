@@ -27,7 +27,7 @@ class mymap[K, V]:
         pass
     def insert(self, key: K, value: V) -> None:
         pass
-    def delete(self, key: K, value: V) -> None:
+    def delete(self, key: K) -> None:
         pass
     def iter(self) -> Generator[tuple[K, V]]:
         for x in self.data:
@@ -49,6 +49,7 @@ for i in range(len(s) - k):
     sub = s[i : i + k]
     v = d.get(sub)
     if v:
+        d.delete(sub)
         d.insert(sub, v + 1)
     else:
         d.insert(sub, 1)
