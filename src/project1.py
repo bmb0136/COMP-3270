@@ -3,6 +3,7 @@ COMP 3270 Intro to Algorithms Homework 1: Introduction to Python
 install python (google it) and make sure you have python version 3.6+ 
 """
 
+from operator import truediv
 import random
 import time
 from collections.abc import Generator
@@ -71,6 +72,39 @@ A = [random.randint(0, 1000000000) for _ in range(10000)]
 target = A[random.randint(0, len(A) - 1)] + A[random.randint(0, len(A) - 1)]
 
 start = time.time_ns()
+m = dict[int, int]()
+for i, x in enumerate(A):
+    y = target - x
+    if y in m:
+        print(f"Positions: {i}, {m[y]} | Values: {x}, {y}")
+        break
+    m[x] = i
+print(f"O(n) version: {(time.time_ns() - start) / 1_000_000_000}")
+
+start = time.time_ns()
+A2 = sorted(A)
+for i, x in enumerate(A2):
+    left = 0
+    right = len(A2) - 1
+    broke = False
+    while left <= right:
+        mid = (left + right) // 2
+        val = A2[mid]
+        s = val + x
+        if s == target:
+            broke = True
+            print(f"Positions*: {i}, {mid} | Values: {x}, {val}")
+            print("*These will be different because the list was sorted")
+            break
+        elif s < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    if broke:
+        break
+print(f"O(n*log(n)) version: {(time.time_ns() - start) / 1_000_000_000}")
+
+start = time.time_ns()
 for i in range(len(A)):
     broke = False
     for j in range(i + 1, len(A)):
@@ -81,13 +115,3 @@ for i in range(len(A)):
     if broke:
         break
 print(f"O(n^2) version: {(time.time_ns() - start) / 1_000_000_000}")
-
-start = time.time_ns()
-m = dict[int, int]()
-for i, x in enumerate(A):
-    y = target - x
-    if y in m:
-        print(f"Positions: {i}, {m[y]} | Values: {x}, {y}")
-        break
-    m[x] = i
-print(f"O(n) version: {(time.time_ns() - start) / 1_000_000_000}")
