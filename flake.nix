@@ -44,7 +44,7 @@
         name = "project2";
         folder = ./src;
         main = "project2.py";
-        packages = pp: [];
+        packages = pp: with pp; [matplotlib];
       };
     });
 }

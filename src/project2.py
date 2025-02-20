@@ -103,34 +103,97 @@ Problem 3: Compare the runtime between merge sort, quick sort with random pivot,
 use the time package to get the time, so use start = time.time() then after the algorithm runs end = time.time()
 make a graph of this. I recommend the ggplot python port plotnine, but matplotlib would be fine as well
 '''
-#your code here
-# inputs might look like A = [random.randint(0,1000000000) for i in range(100000)]
+import sys
+import queue
+import threading
+def test(func, sizes, runs=5):
+    times = [0 for _ in sizes]
+    tasks = queue.Queue()
+    done = queue.Queue()
+    complete = [0 for _ in sizes]
 
+    print(f"Testing {func.__name__}:")
+    for i, n in enumerate(sizes):
+        if i == 0:
+            print("\x1b[s", end="");
+        print(f"\tN={n} (0/{runs})")
 
-# TODO REMOVE ME BEFORE SUBMITTING
-testing = False
-for i in range(1 if testing else 1000):
-    A = [random.randint(0,25 if testing else 1000000) for i in range(15 if testing else 1000)]
-    A.sort()
+    def _thread(t, d, f):
+        import time
+        while (item := t.get()) != None:
+            i, n = item
+            A = [random.randint(0, 1000000000) for i in range(n)]
+            start = time.time()
+            f(A)
+            total = time.time() - start
 
-    B = A.copy()
-    merge_sort(B)
-    #if testing:
-        #print(A)
-        #print(B)
-    assert A == B, "Merge sort broken"
+            d.put_nowait((i, total))
+            t.task_done()
 
-    B = A.copy()
-    quick_sort1(B)
-    #if testing:
-        #print(A)
-        #print(B)
-    assert A == B, "Quick sort (random elem) broken"
+    threads = [None] * 2
+    for i in range(len(threads)):
+        threads[i] = threading.Thread(target=_thread, args=(tasks, done, func))
+        threads[i].start()
 
-    B = A.copy()
-    quick_sort2(B)
-    if testing:
-        print(A)
-        print(B)
-    assert A == B, "Quick sort (3 median) broken"
+    for t in ([(i, x) for i, x in enumerate(sizes)] * runs):
+        tasks.put_nowait(t)
 
+    while True:
+        all_done = True
+        for x in complete:
+            if x < runs:
+                all_done = False
+                break
+        if all_done:
+            break
+        i, time = done.get()
+        done.task_done()
+
+        complete[i] += 1
+        times[i] += time
+
+        print(f"\x1b[u\x1b[s", end="")
+        if i > 0:
+            print(f"\x1b[{i}B", end="")
+        print(f"\tN={sizes[i]} ({complete[i]}/{runs})", end="")
+        sys.stdout.flush()
+
+        if complete[i] >= runs:
+            times[i] /= runs
+            print(f" [Average: {times[i]:.3f}s]")
+    """
+    for i, n in enumerate(sizes):
+        print(f"\tN={n}: (\x1b[s", end="")
+        total = 0
+        for j in range(runs):
+            print(f"\x1b[u{j + 1}/{runs})", end="")
+            sys.stdout.flush()
+            A = [random.randint(0, 1000000000) for i in range(n)]
+            start = time.time()
+            func(A)
+            total += time.time() - start
+            assert _is_sorted(A), f"{func.__name__} failed to sort. Got {A}, but expected {sorted(A)}"
+        times[i] = total / runs
+
+        print(f" [Average: {times[i] * 1000:.3f}ms]")
+    """
+    return times
+
+sizes = list(range(100000, 2000001, 100000))
+t_merge_sort = test(merge_sort, sizes)
+t_quick_sort1 = test(quick_sort1, sizes)
+t_quick_sort2 = test(quick_sort2, sizes)
+
+import matplotlib.pyplot as plt
+
+plt.plot(sizes, t_merge_sort, label="Merge Sort", color="red")
+plt.plot(sizes, t_quick_sort1, label="Quick Sort (Random)", color="green")
+plt.plot(sizes, t_quick_sort2, label="Quick Sort (Median)", color="blue")
+
+plt.title("Sorting Times")
+plt.xlabel("Array Size (items)")
+plt.ylabel("Time (s)")
+
+plt.legend()
+
+plt.show()
