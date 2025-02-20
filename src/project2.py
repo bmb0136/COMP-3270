@@ -96,6 +96,7 @@ def quick_sort2(A):
         pindex = _partition(A, L, R, pindex)
         _sort(A, L, pindex)
         _sort(A, pindex, R)
+    _sort(A, 0, len(A))
 
 
 '''
