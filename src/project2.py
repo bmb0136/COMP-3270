@@ -104,64 +104,14 @@ use the time package to get the time, so use start = time.time() then after the 
 make a graph of this. I recommend the ggplot python port plotnine, but matplotlib would be fine as well
 '''
 import sys
-import queue
-import threading
 def test(func, sizes, runs=3):
+    def _is_sorted(A):
+        for i in range(1, len(A)):
+            if A[i - 1] > A[i]:
+                return False
+        return True
     times = [0 for _ in sizes]
-    tasks = queue.Queue()
-    done = queue.Queue()
-    complete = [0 for _ in sizes]
-
     print(f"Testing {func.__name__}:")
-    for i, n in enumerate(sizes):
-        if i == 0:
-            print("\x1b[s", end="");
-        print(f"\tN={n} (0/{runs})")
-
-    def _thread(t, d, f):
-        import time
-        while (item := t.get()) != None:
-            i, n = item
-            A = [random.randint(0, 1000000000) for i in range(n)]
-            start = time.time()
-            f(A)
-            total = time.time() - start
-
-            d.put_nowait((i, total))
-            t.task_done()
-
-    threads = [None] * 4
-    for i in range(len(threads)):
-        threads[i] = threading.Thread(target=_thread, args=(tasks, done, func))
-        threads[i].start()
-
-    for t in ([(i, x) for i, x in enumerate(sizes)] * runs):
-        tasks.put_nowait(t)
-
-    while True:
-        all_done = True
-        for x in complete:
-            if x < runs:
-                all_done = False
-                break
-        if all_done:
-            break
-        i, time = done.get()
-        done.task_done()
-
-        complete[i] += 1
-        times[i] += time
-
-        print(f"\x1b[u\x1b[s", end="")
-        if i > 0:
-            print(f"\x1b[{i}B", end="")
-        print(f"\tN={sizes[i]} ({complete[i]}/{runs})", end="")
-        sys.stdout.flush()
-
-        if complete[i] >= runs:
-            times[i] /= runs
-            print(f" [Average: {times[i]:.3f}s]")
-    """
     for i, n in enumerate(sizes):
         print(f"\tN={n}: (\x1b[s", end="")
         total = 0
@@ -176,7 +126,6 @@ def test(func, sizes, runs=3):
         times[i] = total / runs
 
         print(f" [Average: {times[i] * 1000:.3f}ms]")
-    """
     return times
 
 sizes = list(range(100000, 2000001, 100000))
