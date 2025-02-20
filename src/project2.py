@@ -1,4 +1,4 @@
-:'''
+'''
 COMP 3270 Intro to Algorithms Homework 1: Introduction to Python
 install python (google it) and make sure you have python version 3.6+ 
 '''
@@ -22,7 +22,7 @@ def merge_sort(A):
             elif not p1_in and p2_in:
                 temp[pt] = A[p2]
                 p2 += 1
-            elif A[p1] < A[p2];
+            elif A[p1] < A[p2]:
                 temp[pt] = A[p1]
                 p1 += 1
             else:
