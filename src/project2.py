@@ -70,7 +70,25 @@ def quick_sort1(A):
         _sort(A, pindex, R)
     _sort(A, 0, len(A))
 def quick_sort2(A):
-    pass
+    def _sort(A, L, R):
+        if R - L <= 1:
+            return
+        
+        i1, i2, i3 = None, None, None
+        while True:
+            if i1 == None:
+                i1 = random.randint(L, R - 1)
+            elif i2 == None or i2 == i1:
+                i2 = random.randint(L, R - 1)
+            elif i3 == None or i3 == i1 or i3 == i2:
+                i3 = random.randint(L, R - 1)
+            else:
+                break
+            
+
+        pindex = _partition(A, L, R, pindex)
+        _sort(A, L, pindex)
+        _sort(A, pindex, R)
 
 
 '''
