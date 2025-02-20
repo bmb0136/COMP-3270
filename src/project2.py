@@ -106,7 +106,7 @@ make a graph of this. I recommend the ggplot python port plotnine, but matplotli
 import sys
 import queue
 import threading
-def test(func, sizes, runs=5):
+def test(func, sizes, runs=3):
     times = [0 for _ in sizes]
     tasks = queue.Queue()
     done = queue.Queue()
@@ -130,7 +130,7 @@ def test(func, sizes, runs=5):
             d.put_nowait((i, total))
             t.task_done()
 
-    threads = [None] * 2
+    threads = [None] * 4
     for i in range(len(threads)):
         threads[i] = threading.Thread(target=_thread, args=(tasks, done, func))
         threads[i].start()
