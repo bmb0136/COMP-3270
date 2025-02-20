@@ -98,7 +98,7 @@ use the time package to get the time, so use start = time.time() then after the 
 make a graph of this. I recommend the ggplot python port plotnine, but matplotlib would be fine as well
 '''
 import sys
-def test(func, sizes, runs=3):
+def test(func, sizes, runs=5):
     def _is_sorted(A):
         for i in range(1, len(A)):
             if A[i - 1] > A[i]:
