@@ -45,8 +45,32 @@ def merge_sort(A):
 '''
 Problem 2: Implement quick sort 2 ways. 1 using a random element as the pivot. 2nd using the median of 3 random elements as the pivot
 '''
-#your code here
-
+def _partition(A, L, R, pindex):
+    if R - L <= 1:
+        return
+    low, high = L + 1, R - 1
+    A[L], A[pindex] = A[pindex], A[L]
+    pivot = A[L]
+    while low <= high:
+        while low < R and A[low] <= pivot:
+            low += 1
+        while high > L and A[high] > pivot:
+            high -= 1
+        if high > low:
+            A[low], A[high] = A[high], A[low]
+    A[high], A[L] = A[L], A[high]
+    return high
+def quick_sort1(A):
+    def _sort(A, L, R):
+        if R - L <= 1:
+            return
+        pindex = random.randint(L, R - 1)
+        pindex = _partition(A, L, R, pindex)
+        _sort(A, L, pindex)
+        _sort(A, pindex, R)
+    _sort(A, 0, len(A))
+def quick_sort2(A):
+    pass
 
 
 '''
@@ -59,9 +83,29 @@ make a graph of this. I recommend the ggplot python port plotnine, but matplotli
 
 
 # TODO REMOVE ME BEFORE SUBMITTING
-for i in range(10000):
-    A = [random.randint(0,100000) for i in range(1000)]
-    A2 = list(A)
-    A2.sort()
-    merge_sort(A)
-    assert(A == A2)
+testing = True
+for i in range(1 if testing else 1000):
+    A = [random.randint(0,25 if testing else 1000000) for i in range(15 if testing else 1000)]
+    A.sort()
+
+    B = A.copy()
+    merge_sort(B)
+    #if testing:
+        #print(A)
+        #print(B)
+    assert A == B, "Merge sort broken"
+
+    B = A.copy()
+    quick_sort1(B)
+    if testing:
+        print(A)
+        print(B)
+    assert A == B, "Quick sort (random elem) broken"
+
+    B = A.copy()
+    quick_sort2(B)
+    if testing:
+        print(A)
+        print(B)
+    assert A == B, "Quick sort (3 median) broken"
+
