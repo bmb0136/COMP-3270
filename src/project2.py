@@ -122,7 +122,7 @@ def test(func, sizes, runs=5):
         print(f" [Average: {times[i] * 1000:.3f}ms]")
     return times
 
-sizes = list(range(1000, 20001, 1000))
+sizes = list(range(100000, 2000001, 100000))
 t_merge_sort = test(merge_sort, sizes)
 t_quick_sort1 = test(quick_sort1, sizes)
 t_quick_sort2 = test(quick_sort2, sizes)
