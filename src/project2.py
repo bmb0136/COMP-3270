@@ -145,4 +145,9 @@ plt.ylabel("Time (s)")
 
 plt.legend()
 
-plt.show()
+try:
+    plt.show()
+except Exception as e:
+    print(f"Error showing plot: {e}");
+plt.savefig("times.png")
+plt.close()
