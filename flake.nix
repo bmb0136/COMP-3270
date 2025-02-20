@@ -27,7 +27,7 @@
           '';
         };
     in {
-      packages.default = self.packages.${system}.project1;
+      packages.default = self.packages.${system}.project2;
       packages.project0 = mkPythonApp {
         name = "project0";
         folder = ./src;
@@ -38,6 +38,12 @@
         name = "project1";
         folder = ./src;
         main = "project1.py";
+        packages = pp: [];
+      };
+      packages.project2 = mkPythonApp {
+        name = "project2";
+        folder = ./src;
+        main = "project2.py";
         packages = pp: [];
       };
     });
