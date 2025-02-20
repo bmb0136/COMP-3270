@@ -74,16 +74,9 @@ def quick_sort2(A):
         if R - L <= 1:
             return
         
-        i1, i2, i3 = None, None, None
-        while True:
-            if i1 == None:
-                i1 = random.randint(L, R - 1)
-            elif i2 == None or i2 == i1:
-                i2 = random.randint(L, R - 1)
-            elif i3 == None or i3 == i1 or i3 == i2:
-                i3 = random.randint(L, R - 1)
-            else:
-                break
+        i1 = random.randint(L, R - 1)
+        i2 = random.randint(L, R - 1)
+        i3 = random.randint(L, R - 1)
 
         v1, v2, v3 = A[i1], A[i2], A[i3]
         if v2 <= v1 <= v3 or v3 <= v1 <= v2:
@@ -129,7 +122,7 @@ def test(func, sizes, runs=3):
         print(f" [Average: {times[i] * 1000:.3f}ms]")
     return times
 
-sizes = list(range(100000, 2000001, 100000))
+sizes = list(range(1000, 20001, 1000))
 t_merge_sort = test(merge_sort, sizes)
 t_quick_sort1 = test(quick_sort1, sizes)
 t_quick_sort2 = test(quick_sort2, sizes)
