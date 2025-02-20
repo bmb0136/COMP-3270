@@ -13,7 +13,7 @@ def merge_sort(A):
         temp = [None] * (R - L)
         p1, p2 = L, mid
         pt = 0
-        while p1 < mid and p2 < R:
+        while p1 < mid or p2 < R:
             p1_in = p1 < mid
             p2_in = p2 < R
             if p1_in and not p2_in:
@@ -58,3 +58,10 @@ make a graph of this. I recommend the ggplot python port plotnine, but matplotli
 # inputs might look like A = [random.randint(0,1000000000) for i in range(100000)]
 
 
+# TODO REMOVE ME BEFORE SUBMITTING
+for i in range(10000):
+    A = [random.randint(0,100000) for i in range(1000)]
+    A2 = list(A)
+    A2.sort()
+    merge_sort(A)
+    assert(A == A2)
