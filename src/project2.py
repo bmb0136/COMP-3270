@@ -84,8 +84,15 @@ def quick_sort2(A):
                 i3 = random.randint(L, R - 1)
             else:
                 break
-            
 
+        v1, v2, v3 = A[i1], A[i2], A[i3]
+        if v2 <= v1 <= v3 or v3 <= v1 <= v2:
+            pindex = i1
+        elif v1 <= v2 <= v3 or v3 <= v1 <= v2:
+            pindex = i2
+        else:
+            pindex = i3
+            
         pindex = _partition(A, L, R, pindex)
         _sort(A, L, pindex)
         _sort(A, pindex, R)
@@ -101,7 +108,7 @@ make a graph of this. I recommend the ggplot python port plotnine, but matplotli
 
 
 # TODO REMOVE ME BEFORE SUBMITTING
-testing = True
+testing = False
 for i in range(1 if testing else 1000):
     A = [random.randint(0,25 if testing else 1000000) for i in range(15 if testing else 1000)]
     A.sort()
@@ -115,9 +122,9 @@ for i in range(1 if testing else 1000):
 
     B = A.copy()
     quick_sort1(B)
-    if testing:
-        print(A)
-        print(B)
+    #if testing:
+        #print(A)
+        #print(B)
     assert A == B, "Quick sort (random elem) broken"
 
     B = A.copy()
