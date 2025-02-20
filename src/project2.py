@@ -8,9 +8,38 @@ import time
 '''
 Problem 1: Implement merge sort
 '''
-# your code here
-
-
+def merge_sort(A):
+    def _merge(A, L, mid, R):
+        temp = [None] * (R - L)
+        p1, p2 = L, mid
+        pt = 0
+        while p1 < mid and p2 < R:
+            p1_in = p1 < mid
+            p2_in = p2 < R
+            if p1_in and not p2_in:
+                temp[pt] = A[p1]
+                p1 += 1
+            elif not p1_in and p2_in:
+                temp[pt] = A[p2]
+                p2 += 1
+            elif A[p1] < A[p2];
+                temp[pt] = A[p1]
+                p1 += 1
+            else:
+                temp[pt] = A[p2]
+                p2 += 1
+            pt += 1
+        for i in range(len(temp)):
+            A[L + i] = temp[i]
+    def _sort(A, L, R):
+        if R - L <= 1:
+            return
+        mid = (L + R) // 2
+        _sort(A, L, mid)
+        _sort(A, mid, R)
+        _merge(A, L, mid, R)
+        pass
+    _sort(A, 0, len(A))
 
 
 '''
