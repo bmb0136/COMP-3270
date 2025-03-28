@@ -27,7 +27,7 @@
           '';
         };
     in {
-      packages.default = self.packages.${system}.project2;
+      packages.default = self.packages.${system}.project3;
       packages.project0 = mkPythonApp {
         name = "project0";
         folder = ./src;
@@ -45,6 +45,12 @@
         folder = ./src;
         main = "project2.py";
         packages = pp: with pp; [matplotlib];
+      };
+      packages.project3 = mkPythonApp {
+        name = "project3";
+        folder = ./src/project3;
+        main = "homework3.py";
+        packages = pp: with pp; [argparse networkx matplotlib];
       };
     });
 }
