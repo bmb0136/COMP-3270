@@ -23,16 +23,16 @@ class DisjointSet:
     # data structure to back the disjoint set here (you can use an array, a dict, or you could use a graph)
     
     def __init__(self):
-        # initialize here
+        pass
 
     def makeset(self, x):
-        # your code here        
+        pass
     
     def find(self, x):
-        # your code here
+        pass
 
     def union(self, x, y):
-        # your code here
+        pass
 
 
     

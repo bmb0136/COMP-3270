@@ -23,7 +23,9 @@
           inherit name;
           runtimeInputs = [(pkgs.python3.withPackages packages)];
           text = ''
-            python3 ${folder}/${main}
+            pushd ${folder} >/dev/null 2>/dev/null
+            python3 ${main} "$@"
+            popd >/dev/null 2>/dev/null
           '';
         };
     in {
@@ -49,8 +51,8 @@
       packages.project3 = mkPythonApp {
         name = "project3";
         folder = ./src/project3;
-        main = "homework3.py";
-        packages = pp: with pp; [argparse networkx matplotlib];
+        main = "homework3.py --graph ${./src/project3/graph.pickle}";
+        packages = pp: with pp; [networkx matplotlib];
       };
     });
 }
