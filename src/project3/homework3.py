@@ -55,10 +55,12 @@ class DisjointSet:
         if x != y:
             self.parents[y] = x
 
+    def components(self):
+        return sum((1 if i == x else 0) for i, x in enumerate(self.parents))
+
     @override
     def __str__(self) -> str:
-        cc = sum((1 if i == x else 0) for i, x in enumerate(self.parents))
-        return f"DisjointSet [{", ".join(f"{x}->{self.find(x)}" for x in self.mapping.keys())}] ({cc} CC)"
+        return f"DisjointSet [{", ".join(f"{x}->{self.find(x)}" for x in self.mapping.keys())}] ({self.components()} CC)"
 
 """
 Problem 2
@@ -79,10 +81,31 @@ plt.savefig('graph.png')
 
 
 def kruskal(G):
-    pass
-
+    get_weight = lambda e: G[e[0]][e[1]]["weight"]
+    E = sorted(G.edges, key=get_weight)
+    ds = DisjointSet()
+    for n in G.nodes:
+        ds.makeset(n)
+    mst = nx.Graph()
+    for x, y in E:
+        e = (x, y)
+        x = ds.find(x)
+        y = ds.find(y)
+        if x != y:
+            ds.union(x, y)
+            mst.add_edge(x, y, weight=get_weight(e))
+    return mst
 
 # load graphs and run functions
 
 graph = pickle.load(open(args.graph, "rb"))
-kruskal(graph)
+mst = kruskal(graph)
+
+edge_labels = nx.get_edge_attributes(mst, "weight")
+pos = nx.spring_layout(mst)
+nx.draw_networkx_edges(mst, pos)
+nx.draw_networkx_nodes(mst, pos)
+nx.draw_networkx_labels(mst, pos)
+nx.draw_networkx_edge_labels(mst, pos, edge_labels)
+plt.axis("off")
+plt.savefig("mst.png")
