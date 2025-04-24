@@ -29,7 +29,7 @@
           '';
         };
     in {
-      packages.default = self.packages.${system}.project3;
+      packages.default = self.packages.${system}.project4;
       packages.project0 = mkPythonApp {
         name = "project0";
         folder = ./src;
@@ -53,6 +53,12 @@
         folder = ./src/project3;
         main = "homework3.py --graph ${./src/project3/graph.pickle}";
         packages = pp: with pp; [networkx matplotlib];
+      };
+      packages.project4 = mkPythonApp {
+        name = "project4";
+        folder = ./src/project4;
+        main = "homework4.py --graph1 ${./src/project4/maze.adjlist} --graph2 ${./src/project4/chess_movetree.pickle} --start_node1 '(0,0)' --end_node1 '(4,4)'";
+        packages = pp: with pp; [networkx matplotlib chess];
       };
     });
 }
