@@ -11,6 +11,7 @@ import argparse
 import chess
 import networkx as nx
 import pickle
+from collections import deque
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--graph1", help="file containing graph in adjacency list format for problem 1")
@@ -73,12 +74,27 @@ if board.is_checkmate():
 outputs: prints move sequence to fastest possible checkmate
 '''
 def checkmate(G, start_node: str):
-    pass
-
-
-
-
-
+    q = deque([start_node])
+    seen = set()
+    seen.add(start_node)
+    while q:
+        n = q.popleft()
+        b = chess.Board(n)
+        if b.is_checkmate():
+            L = []
+            x = n
+            while x != None:
+                L.append(G.nodes[x]["move"])
+                x = G.nodes[x]["parent"]
+            if L[-1] == None:
+                L.pop()
+            print(", ".join(L[::-1]))
+            return
+        for x in G[n]:
+            if x in seen:
+                continue
+            seen.add(x)
+            q.append(x)
 
 # load graphs and run functions
 maze_graph = nx.read_adjlist(args.graph1)
