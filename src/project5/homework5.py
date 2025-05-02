@@ -46,7 +46,7 @@ class IndexedPriorityQueue:
     def __heapify_up(self, key):
         assert key in self.index
         i = self.index[key]
-        while i >= 0 and (p := (i - 1) // 2) >= 0 and (x := self.min_heap[i])[1] < (y := self.min_heap[p])[1]:
+        while i >= 0 and (p := (i - 1) // 2) >= 0 and (x := self.min_heap[i])[0] < (y := self.min_heap[p])[0]:
             self.__swap(x[0], y[0])
 
     def __heapify_down(self, key):
