@@ -35,7 +35,8 @@ class IndexedPriorityQueue:
         pass
 
     def peek(self):
-        pass
+        assert len(self.min_heap) > 0
+        return self.min_heap[0]
 
     def decrease_key(self, key, new_value):
         pass
