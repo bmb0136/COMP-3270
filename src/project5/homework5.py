@@ -29,54 +29,25 @@ class IndexedPriorityQueue:
         self.index = {}
 
     def push(self, key, value):
-        self.min_heap.append((key, value))
-        self.__heapify_up(len(self.min_heap) - 1)
         pass
 
     def popmin(self):
-        assert len(self.min_heap) > 0
-        if len(self.min_heap) == 1:
-            r = self.min_heap[0]
-            self.min_heap.pop()
-            return r[1]
-        self.__swap(self.min_heap[0][0], self.min_heap[-1][0])
-        r = self.min_heap[-1][1]
-        self.min_heap.pop()
-        self.__heapify_down(0)
-        return r
-        
+        pass
 
     def peek(self):
-        assert len(self.min_heap) > 0
-        return self.min_heap[0][1]
+        pass
 
     def decrease_key(self, key, new_value):
         pass
     
     def __heapify_up(self, i):
-        p = (i - 1) // 2
-        if i >= 0 and p >= 0 and self.min_heap[i][0] < self.min_heap[p][0]:
-            self.__swap(i, p)
-            self.__heapify_up(p)
+        pass
 
     def __heapify_down(self, i):
-        while i < len(self.min_heap):
-            l = (2 * i) + 1
-            r = (2 * i) + 2
-            if l < len(self.min_heap) and self.min_heap[i][0] > self.min_heap[l][0]:
-                self.__swap(i, l)
-                self.__heapify_down(l)
-            if r < len(self.min_heap) and self.min_heap[i][0] > self.min_heap[r][0]:
-                self.__swap(i, r)
-                self.__heapify_down(r)
+        pass
 
     def __swap(self, i, j):
-        assert i >= 0 and i < len(self.min_heap)
-        assert j >= 0 and j < len(self.min_heap)
-        k1 = self.min_heap[i][0]
-        k2 = self.min_heap[j][0]
-        self.index[k1], self.index[k2] = j, i
-        self.min_heap[i], self.min_heap[j] = self.min_heap[j], self.min_heap[i]
+        pass
 
 '''
 Problem 2
