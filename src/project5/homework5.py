@@ -31,15 +31,17 @@ class IndexedPriorityQueue:
     def push(self, key, value):
         assert key not in self.index
         self.index[key] = len(self.min_heap)
-        self.min_heap.push((key, value))
+        self.min_heap.append([key, value])
         self.__heapify_up(len(self.min_heap) - 1)
 
     def popmin(self):
         assert len(self.min_heap) > 0
         r = self.min_heap[0][0]
-        self.__swap(0, len(self.min_heap) - 1)
-        self.min_heap.pop()
-        self.__heapify_down(0)
+        if len(self.min_heap) > 1:
+            self.__swap(0, len(self.min_heap) - 1)
+            self.min_heap.pop()
+            self.__heapify_down(0)
+        del self.index[r]
         return r
 
     def peek(self):
@@ -55,9 +57,9 @@ class IndexedPriorityQueue:
     
     def __heapify_up(self, i):
         p = (i - 1) // 2
-        while p >= 0 and i >= 0 and self.min_heap[i][0] < self.min_heap[p][0]:
+        if p >= 0 and i >= 0 and self.min_heap[i][1] < self.min_heap[p][1]:
             self.__swap(i, p)
-            i = p
+            self.__heapify_up(p)
 
     def __heapify_down(self, i):
         if i < 0 or i >= len(self.min_heap):
