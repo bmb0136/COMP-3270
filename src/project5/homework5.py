@@ -29,6 +29,8 @@ class IndexedPriorityQueue:
         self.index = {}
 
     def push(self, key, value):
+        self.min_heap.append((key, value))
+        self.__heapify_up(key)
         pass
 
     def popmin(self):
@@ -42,10 +44,23 @@ class IndexedPriorityQueue:
         pass
     
     def __heapify_up(self, key):
-        pass
+        assert key in self.index
+        i = self.index[key]
+        while i >= 0 and (p := (i - 1) // 2) >= 0 and (x := self.min_heap[i])[1] < (y := self.min_heap[p])[1]:
+            self.__swap(x[0], y[0])
 
     def __heapify_down(self, key):
         pass
+
+    def __swap(self, k1, k2):
+        assert k1 in self.index
+        assert k2 in self.index
+        i = self.index[k1]
+        j = self.index[k2]
+        assert i >= 0 and i < len(self.min_heap)
+        assert j >= 0 and j < len(self.min_heap)
+        self.index[k1], self.index[k2] = j, i
+        self.min_heap[i], self.min_heap[j] = self.min_heap[j], self.min_heap[i]
 
 '''
 Problem 2
