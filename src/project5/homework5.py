@@ -77,8 +77,13 @@ class IndexedPriorityQueue:
         assert i >= 0 and i < len(self.min_heap)
         assert j >= 0 and j < len(self.min_heap)
         k1, k2 = self.min_heap[i][0], self.min_heap[j][0]
+        assert k1 in self.index
+        assert k2 in self.index
         self.index[k1], self.index[k2] = self.index[k2], self.index[k1]
         self.min_heap[i], self.min_heap[j] = self.min_heap[j], self.min_heap[i]
+
+    def __len__(self):
+        return len(self.min_heap)
 
 '''
 Problem 2
@@ -86,8 +91,41 @@ Dijkstras minimum path from s to t
 You should use the Indexed priority queue from problem 1
 '''
 def Dijkstras(G, s, t):
-    # your code here
-    pass
+    ipq = IndexedPriorityQueue()
+
+    def relax(v, x, e):
+        if G.nodes[v]["dist"] + e["weight"] < G.nodes[x]["dist"]:
+            G.nodes[x]["parent"] = v
+            G.nodes[x]["dist"] = G.nodes[v]["dist"] + e["weight"]
+            ipq.decrease_key(x, G.nodes[x]["dist"])
+
+    for x in G.nodes:
+        G.nodes[x]["parent"] = None
+        G.nodes[x]["dist"] = float('inf')
+        ipq.push(x, G.nodes[x]["dist"])
+    ipq.decrease_key(s, 0)
+    G.nodes[s]["dist"] = 0
+
+    seen = set()
+    while len(ipq) > 0:
+        v = ipq.popmin()
+        if v == t:
+            path = []
+            n = t
+            while n != None:
+                path.append(n)
+                if n == s:
+                    break
+                n = G.nodes[n]["parent"]
+            path.reverse()
+            return path
+
+        for x in G.neighbors(v):
+            if x not in seen:
+                relax(v, x, G.edges[(v, x)])
+        
+        seen.add(v)
+    return None
 
 # make graph and run functions
 
@@ -102,4 +140,4 @@ G.add_edge("c","d", weight=10)
 G.add_edge("c","f", weight=11)
 G.add_edge("d","f", weight=15)
 G.add_edge("e","f", weight=6)
-Dijkstras(G, "a", "e")
+print(" -> ".join(Dijkstras(G, "a", "e")))
