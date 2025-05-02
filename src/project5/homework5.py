@@ -54,13 +54,29 @@ class IndexedPriorityQueue:
         self.__heapify_up(i)
     
     def __heapify_up(self, i):
-        pass
+        p = (i - 1) // 2
+        while p >= 0 and i >= 0 and self.min_heap[i][0] < self.min_heap[p][0]:
+            self.__swap(i, p)
+            i = p
 
     def __heapify_down(self, i):
-        pass
+        if i < 0 or i >= len(self.min_heap):
+            return
+        l = (2 * i) + 1
+        r = (2 * i) + 2
+        if l < len(self.min_heap) and self.min_heap[i][1] > self.min_heap[l][1]:
+            self.__swap(i, l)
+            self.__heapify_down(l)
+        if r < len(self.min_heap) and self.min_heap[i][1] > self.min_heap[r][1]:
+            self.__swap(i, r)
+            self.__heapify_down(r)
 
     def __swap(self, i, j):
-        pass
+        assert i >= 0 and i < len(self.min_heap)
+        assert j >= 0 and j < len(self.min_heap)
+        k1, k2 = self.min_heap[i][0], self.min_heap[j][0]
+        self.index[k1], self.index[k2] = self.index[k2], self.index[k1]
+        self.min_heap[i], self.min_heap[j] = self.min_heap[j], self.min_heap[i]
 
 '''
 Problem 2
