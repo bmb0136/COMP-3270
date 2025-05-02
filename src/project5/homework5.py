@@ -29,16 +29,29 @@ class IndexedPriorityQueue:
         self.index = {}
 
     def push(self, key, value):
-        pass
+        assert key not in self.index
+        self.index[key] = len(self.min_heap)
+        self.min_heap.push((key, value))
+        self.__heapify_up(len(self.min_heap) - 1)
 
     def popmin(self):
-        pass
+        assert len(self.min_heap) > 0
+        r = self.min_heap[0][0]
+        self.__swap(0, len(self.min_heap) - 1)
+        self.min_heap.pop()
+        self.__heapify_down(0)
+        return r
 
     def peek(self):
-        pass
+        assert len(self.min_heap) > 0
+        return self.min_heap[0][0]
 
     def decrease_key(self, key, new_value):
-        pass
+        assert key in self.index
+        i = self.index[key]
+        assert new_value < self.min_heap[i][1]
+        self.min_heap[i][1] = new_value
+        self.__heapify_up(i)
     
     def __heapify_up(self, i):
         pass
